@@ -1,14 +1,14 @@
 game = {}
 
 function game:init()
+    bouncer = Ball:newBall(100, 100, -50, -20)
 end
 
 
 function game:update(dt)
+    bouncer:update(dt)
 end
 
 function game:draw()
-    love.graphics.rectangle('fill', 10, 10, 10, 10)
-    love.graphics.points(mouse.x, mouse.y)
-    love.graphics.print(message, mouse.x, mouse.y)
+    bouncer:render()
 end

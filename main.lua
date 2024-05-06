@@ -1,13 +1,13 @@
 local push = require "lib/push"
+
+require "src/Ball"
 require "src/game"
 
+SCALE = 2
 VIRTUAL_WIDTH = 320
 VIRTUAL_HEIGHT = 240
-
--- this is the scale factor for virtual pixels
-SCALE = 2
-
-message = "this is a message"
+WINDOW_WIDTH = VIRTUAL_WIDTH * SCALE
+WINDOW_HEIGHT = VIRTUAL_HEIGHT * SCALE
 
 function love.load()
     -- graphics settings for pixelated retro look
@@ -15,7 +15,7 @@ function love.load()
     love.graphics.setLineStyle('rough')
 
     -- window settings
-    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, VIRTUAL_WIDTH * SCALE, VIRTUAL_HEIGHT * SCALE)
+    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT)
 
     -- mouse settings
     love.mouse.setVisible(false)
@@ -47,9 +47,9 @@ function love.draw()
 end
 
 function love.keypressed(key)
-	if key == 'escape' then
-		love.event.quit()
-	end
+    if key == 'escape' then
+        love.event.quit()
+    end
     if key == 'r' then
         love.event.quit('restart')
     end
