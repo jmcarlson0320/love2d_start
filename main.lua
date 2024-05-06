@@ -1,14 +1,13 @@
 local push = require "lib/push"
 require "src/game"
 
-VIRTUAL_WIDTH = 480
-VIRTUAL_HEIGHT = 270
+VIRTUAL_WIDTH = 320
+VIRTUAL_HEIGHT = 240
+
+-- this is the scale factor for virtual pixels
+SCALE = 2
 
 message = "this is a message"
-
--- how many "real" pixels make up a virtual pixel
--- setting of 4 == "fullscreen windowed"
-SCALE = 2
 
 function love.load()
     -- graphics settings for pixelated retro look
@@ -20,6 +19,7 @@ function love.load()
 
     -- mouse settings
     love.mouse.setVisible(false)
+    mouse = {x = 0, y = 0}
 
     -- initialize font
     defaultFont = love.graphics.newFont('/fonts/font.ttf', 8)
@@ -30,11 +30,9 @@ function love.load()
 end
 
 function love.update(dt)
-    x, y = love.mouse.getPosition()
-
-    -- use scale factor to scale mouse coordinates
-    x = x / SCALE
-    y = y / SCALE
+    local x, y = love.mouse.getPosition()
+    mouse.x = x / SCALE
+    mouse.y = y / SCALE
 
     -- update game logic
     game:update(dt)
@@ -43,16 +41,8 @@ end
 function love.draw()
     -- low-rez drawing using push library
     push:start()
-        love.graphics.clear()
-        love.graphics.rectangle('fill', 10, 10, 10, 10)
-
-        -- add a translation to draw calls so points land in the middle of a pixel
-        love.graphics.translate(0.5, 0.5)
-        love.graphics.points(0, 0, VIRTUAL_WIDTH - 1, 0, VIRTUAL_WIDTH - 1, VIRTUAL_HEIGHT - 1, 0, VIRTUAL_HEIGHT - 1)
-        love.graphics.points(x, y)
-
-        -- render game
-        game:draw()
+    -- render game
+    game:draw()
     push:finish()
 end
 
