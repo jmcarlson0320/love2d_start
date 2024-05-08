@@ -1,7 +1,8 @@
 local push = require "lib/push"
 
-require "src/Ball"
-require "src/game"
+Timer = require "src/Timer"
+Ball = require "src/Ball"
+game = require "src/game"
 
 SCALE = 2
 VIRTUAL_WIDTH = 320
@@ -33,6 +34,9 @@ function love.update(dt)
     local x, y = love.mouse.getPosition()
     mouse.x = x / SCALE
     mouse.y = y / SCALE
+
+    -- update timers
+    Timer.update(dt)
 
     -- update game logic
     game:update(dt)

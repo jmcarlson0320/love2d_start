@@ -1,19 +1,21 @@
-Ball = {}
+local Ball = {}
 
 local DEFAULT_SIZE = 10
 
 function Ball:newBall(x, y, dx, dy, size)
     local b = {}
-    setmetatable(b, {__index = self})
+
     b.x = x
     b.y = y
     b.dx = dx
     b.dy = dy
     b.size = size or DEFAULT_SIZE
-    return b
+
+    return setmetatable(b, {__index = self})
 end
 
 function Ball:update(dt)
+    self.dy = self.dy + 5
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt
 
@@ -32,3 +34,5 @@ end
 function Ball:render()
     love.graphics.ellipse('fill', self.x, self.y, self.size, self.size)
 end
+
+return Ball
