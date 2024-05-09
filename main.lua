@@ -1,52 +1,53 @@
-local push = require "lib/push"
+push = require 'lib/push'
 
-Timer = require "src/Timer"
-Ball = require "src/Ball"
-game = require "src/game"
+StateMachine = require 'src/StateMachine'
+BaseState = require 'src/states/BaseState'
+TestState = require 'src/states/game/TestState'
 
-SCALE = 2
+Timer = require 'src/Timer'
+Ball = require 'src/Ball'
+
+SCALE = 3
 VIRTUAL_WIDTH = 320
 VIRTUAL_HEIGHT = 240
 WINDOW_WIDTH = VIRTUAL_WIDTH * SCALE
 WINDOW_HEIGHT = VIRTUAL_HEIGHT * SCALE
 
 function love.load()
-    -- graphics settings for pixelated retro look
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setLineStyle('rough')
 
-    -- window settings
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT)
 
-    -- mouse settings
     love.mouse.setVisible(false)
-    mouse = {x = 0, y = 0}
+    mousePos = {x = 0, y = 0}
+    keyboardPressed = {}
 
-    -- initialize font
     defaultFont = love.graphics.newFont('/fonts/font.ttf', 8)
     love.graphics.setFont(defaultFont)
 
-    -- initialize game logic
-    game:init()
+    stateMachine = StateMachine:new{
+        ['default'] = function() return BaseState:new() end,
+        ['test'] = function() return TestState:new() end
+    }
+    stateMachine:change('test')
 end
 
 function love.update(dt)
     local x, y = love.mouse.getPosition()
-    mouse.x = x / SCALE
-    mouse.y = y / SCALE
+    mousePos.x = x / SCALE
+    mousePos.y = y / SCALE
 
-    -- update timers
     Timer.update(dt)
 
-    -- update game logic
-    game:update(dt)
+    stateMachine:update(dt)
+
+    keyboardPressed = {}
 end
 
 function love.draw()
-    -- low-rez drawing using push library
     push:start()
-    -- render game
-    game:draw()
+    stateMachine:render()
     push:finish()
 end
 
@@ -54,7 +55,10 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
+
     if key == 'r' then
         love.event.quit('restart')
     end
+
+    keyboardPressed[key] = true
 end
