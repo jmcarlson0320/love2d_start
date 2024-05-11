@@ -1,14 +1,18 @@
 local Timer = {}
 
+-- table of installed timers
 local timers = {}
 
-local ID = 0
+-- unique timer id
+local nextID = 0
 
 local function newID()
-    ID = ID + 1
-    return ID
+    local id = nextID
+    nextID = nextID + 1
+    return id
 end
 
+-- 
 local function start(timer)
     if not timer.active then
         timer.active = true
@@ -30,6 +34,7 @@ local function reset(timer)
     timer.complete = false
 end
 
+-- general timer constructor
 local function newTimer(duration, callback, iterations)
     local t = {}
 
@@ -51,12 +56,16 @@ local function newTimer(duration, callback, iterations)
     return t
 end
 
-function Timer.remove(timer)
+-- public interface starts here
+
+-- uninstall a timer, uninstalled timers are no longer updated by Timer.update()
+function Timer.uninstall(timer)
     if timers[timer.id] then
         table.remove(timers, timer.id)
     end
 end
 
+-- install a timer, installed timers are updated by Timer.update()
 function Timer.install(timer)
     if not timers[timer.id] then
         timers[timer.id] = timer
@@ -64,15 +73,18 @@ function Timer.install(timer)
     timer:reset()
 end
 
+-- creates and installs a new single-shot timer
 function Timer.once(duration, callback)
     return newTimer(duration, callback, 1)
 end
 
+-- creates and installs a new recurring timer
 function Timer.recurring(duration, callback, iterations)
     iterations = iterations or 0
     return newTimer(duration, callback, iterations)
 end
 
+-- update all installed timers
 function Timer.update(dt)
     for id, timer in pairs(timers) do
         if timer.active then

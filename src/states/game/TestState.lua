@@ -8,7 +8,7 @@ function TestState:new()
     this.boomTimer = Timer.recurring(1, function()
         Event:trigger('boom')
     end, 5)
-    Timer.remove(this.boomTimer)
+    Timer.uninstall(this.boomTimer)
     Timer.install(this.boomTimer)
 
     return setmetatable(this, {__index = self})
