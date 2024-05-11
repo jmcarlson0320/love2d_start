@@ -2,6 +2,8 @@ push = require 'lib/push'
 Timer = require 'lib/Timer'
 Event = require 'lib/Event'
 
+Input = require 'src/Input'
+Keymap = require 'src/Keymap'
 StateMachine = require 'src/StateMachine'
 BaseState = require 'src/states/BaseState'
 TestState = require 'src/states/game/TestState'
@@ -19,13 +21,6 @@ function love.load()
     love.graphics.setLineStyle('rough')
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT)
-
-    love.mouse.setVisible(false)
-
-    mousePos = {x = 0, y = 0}
-    keyboardPressed = {}
-    keyboardReleased = {}
-    keyboardDown = {}
 
     defaultFont = love.graphics.newFont('/fonts/font.ttf', 8)
     love.graphics.setFont(defaultFont)
@@ -50,16 +45,20 @@ function love.load()
 end
 
 function love.update(dt)
-    local x, y = love.mouse.getPosition()
-    mousePos.x = x / SCALE
-    mousePos.y = y / SCALE
+    Input:getInput()
 
     Timer.update(dt)
-
     stateMachine:update(dt)
 
-    keyboardPressed = {}
-    keyboardReleased = {}
+    if input['restart'] then
+        love.event.quit('restart')
+    end
+
+    if input['exit'] then
+        love.event.quit()
+    end
+
+    Input:clearKeyboard()
 end
 
 function love.draw()
@@ -69,20 +68,3 @@ function love.draw()
     push:finish()
 end
 
-function love.keypressed(key)
-    if key == 'escape' then
-        love.event.quit()
-    end
-
-    if key == 'r' then
-        love.event.quit('restart')
-    end
-
-    keyboardPressed[key] = true
-    keyboardDown[key] = true
-end
-
-function love.keyreleased(key)
-    keyboardReleased[key] = true
-    keyboardDown[key] = false
-end

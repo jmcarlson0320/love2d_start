@@ -17,15 +17,11 @@ end
 function TestState:update(dt)
     self.ball:update(dt)
 
-    if keyboardPressed['b'] then
-        stateMachine:change('default')
-    end
-
-    if keyboardReleased['x'] then
+    if input['boom'] then
         Event:trigger('boom')
     end
 
-    if keyboardPressed['space'] then
+    if input['reset'] then
         self.boomTimer:reset()
         self.boomTimer:start()
     end
@@ -40,6 +36,11 @@ function TestState:render()
         love.graphics.print('done!!', 200, 200)
     else
         love.graphics.print('waiting....', 200, 200)
+    end
+    for k, v in pairs(input) do
+        if v then
+            love.graphics.print(k, 30, 30)
+        end
     end
 end
 
