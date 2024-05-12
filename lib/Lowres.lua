@@ -9,6 +9,9 @@ function Lowres:init(vWidth, vHeight, sWidth, sHeight)
     })
     self.canvas = love.graphics.newCanvas(vWidth, vHeight)
     self.scale = sWidth / vWidth
+
+    lowresFont = love.graphics.newFont('/fonts/font.ttf', 8)
+    love.graphics.setFont(lowresFont)
 end
 
 function Lowres:beginDraw()

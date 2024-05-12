@@ -1,7 +1,7 @@
 local Input = {}
 
 -- per frame input state. the rest of the game code gets input from this table.
--- ex: if input['up'] then playerJump() end
+-- for example:if input['up'] then playerJump() end
 input = {}
 
 -- per frame keyboard state
