@@ -1,12 +1,12 @@
 local StateMachine = {}
 
-function StateMachine:new(states)
+function StateMachine.new(states)
     local s = {}
     
     s.states = states or {}
     s.current = BaseState:new()
 
-    return setmetatable(s, {__index = self})
+    return setmetatable(s, {__index = StateMachine})
 end
 
 function StateMachine:change(stateName, enterParams)

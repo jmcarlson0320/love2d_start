@@ -12,8 +12,9 @@ Keymap = require 'src/Keymap'
 StateMachine = require 'src/StateMachine'
 BaseState = require 'src/states/BaseState'
 
+-- game objects
+Ball = require 'src/Ball'
+
 -- game states
 TestState = require 'src/states/game/TestState'
 
--- game objects
-Ball = require 'src/Ball'
